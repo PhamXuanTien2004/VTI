@@ -1,12 +1,24 @@
--- menh de select
-select current_date;
+-- Mệnh đề SELECT
+SELECT
+    CURRENT_DATE AS "today",
+    PI() AS PI,
+    1 + 2 AS sum,
+    "MySQL" AS "language";
 
+-- Mệnh đề FROM
+-- VD: Lấy ra tất cả phòng ban
+SELECT department_id, department_name
+FROM department;
+-- VD: Lấy ra tất cả đề thi
+SELECT *
+FROM exam;
+-- VD: Lấy ra duration (không trùng nhau) trong đề thi
+SELECT DISTINCT duration
+FROM exam;
 
-
-
- 
-
-
+-- Mệnh đề WHERE
+-- Toán tử so sánh: >, >=, <, <=, =, != (<>)
+-- VD: Lấy ra phòng ban có id > 5
 select department_id, department_name
 from department;
 -- vd: lấy tất cả đề thi

@@ -84,6 +84,48 @@ order by department_id desc
 limit 1;
 
 
+-- Aggregate funcion -  Các hàm tổng hợp 
+-- count, sum - tổng, min, max, avg
+-- count(*) đếm số dòng
+-- count (duration) đếm số dòng của duration khác null
+-- count (distinct duration) đếm số dòng của duration có gtri khac nhau
+-- chú ý: áp dụng cho các giá trị khác null
+-- vd: lấy ra công việc
+SELECT COUNT(*) 
+FROM department;
+-- vd: lấy ta số lượng tgian thi
+select 
+	count(*),
+    count(duration),
+    count( distinct duration),
+    count(3)
+from exam;
+
+-- mệnh đề group by
+-- vd: thống kê mỗi chức vụ có bnh nhân viên
+SELECT position_id, count(account_id) as account_count
+from account
+group by position_id;
+ 
+-- mệnh đề having
+SELECT *
+from account
+group by position_id
+having count(account_id) >2;
+
+-- cập nhật dữ liệu
+-- vd: đổi tên phòng ban số 1 thành phòng chờ
+UPDATE department
+SET department_name = "Phòng chờ"
+WHERE department_id = 1;
+
+-- xóa dữ liệu
+-- vd: xóa phòng ban số 1
+DELETE from department
+where department_id=1;
+
+
+
 
 
 

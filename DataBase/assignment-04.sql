@@ -294,6 +294,11 @@ having count(account_id) >3;
 -- 	Question 7: Thông kê mỗi Question được sử dụng trong bao nhiêu Exam
 -- 	Question 8: Lấy ra Question có nhiều câu trả lời nhất
 -- 	Question 9: Thống kê số lượng account trong mỗi group
+select group_id,count(group_id) as count
+from group_account
+left join `group` using (group_id)
+group by group_id;
+
 -- 	Question 10: Tìm chức vụ có ít người nhất
 -- 	Question 11: Thống kê mỗi phòng ban có bao nhiêu dev, test, scrum master, PM
 -- 	Question 12: Lấy thông tin chi tiết của câu hỏi bao gồm: thông tin cơ bản của

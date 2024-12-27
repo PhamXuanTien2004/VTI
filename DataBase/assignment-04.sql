@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS assignment_03;
-CREATE DATABASE assignment_03;
-USE assignment_03;
+DROP DATABASE IF EXISTS assignment_04;
+CREATE DATABASE assignment_04;
+USE assignment_04;
 
 -- Tạo bảng department
 DROP TABLE IF EXISTS department;
@@ -265,84 +265,40 @@ VALUES                      (1         , 1      ),
                             (8         , 8      ),
                             (9         , 2      ),
                             (10        , 10     );
-                            
-                            
--- Question 1: Thêm ít nhất 10 record vào mỗi table
--- Question 2: lấy ra tất cả các phòng ban
-select *
-from department;
--- Question 3: lấy ra id của phòng ban "Sale"
-select department_id
-from department
-where department_name="Sale";
--- Question 4: lấy ra thông tin account có full name dài nhất
-select * 
-from account
-order by char_length(full_name) desc
-limit 1;
 
--- Question 5: Lấy ra thông tin account có full name dài nhất và thuộc phòng ban có id= 3
+-- 1. Join.
+-- 	Question 1: Viết lệnh để lấy ra danh sách nhân viên và thông tin phòng ban của họ
+SELECT full_name, department_name
+from account
+join department using (department_id);
+
+-- 	Question 2: Viết lệnh để lấy ra thông tin các account được tạo sau ngày 20/12/2010
 select *
 from account
-where department_id = 3
-order by char_length(full_name) desc
-limit 1;
--- Question 6: Lấy ra tên group đã tham gia trước ngày 20/12/2019
-select *
-from `group`
-where created_date < '2019/12/20';
--- Question 7: Lấy ra ID của question có >= 4 câu trả lời
-SELECT question_id, count(answer_id) as count
-from answer
-group by question_id
-having count(answer_id) >=4;
-
--- Question 8: Lấy ra các mã đề thi có thời gian thi >= 60 phút và được tạo trước ngày
--- 20/12/2019
-select code
-from exam
-where duration >=60 and created_date < '2019/12/20';
--- Question 9: Lấy ra 5 group được tạo gần đây nhất
-select *
-from `group`
-order by created_date desc
-limit 5;
-
--- Question 10: Đếm số nhân viên thuộc department có id = 2
-select count(account_id) as account_count
+where created_date > "2010-12-20";
+-- 	Question 3: Viết lệnh để lấy ra tất cả các developer
+SELECT account.*
+from position
+join account using (position_id)
+WHERE position_name="Dev";
+-- 	Question 4: Viết lệnh để lấy ra danh sách các phòng ban có >3 nhân viên
+SELECT department.*, count(account_id) as count
 from account
-WHERE department_id = 2;
+inner join department using (department_id)
+GROUP BY department_id
+having count(account_id) >3;
 
--- Question 11: Lấy ra nhân viên có tên bắt đầu bằng chữ "D" và kết thúc bằng chữ "o"
--- lấy ra tên Tien trong cả PHAM XUAN TIEN hàm substring_index("doan","phần tử cần tìm, lần xuất hiện thứ mấy của phần tử(có thể âm dương))
-select substring_index("Pham Xuan Tien"," ",-1);
-
-select *
-from account
-where substring_index(full_name," ",-1) like "D%o";
-
--- Question 12: Xóa tất cả các exam được tạo trước ngày 20/12/2019
-DELETE from exam
-where created_date < "2019-12-20";
-
--- Question 13: Xóa tất cả các question có nội dung bắt đầu bằng từ "câu hỏi"
-DELETE from question
-WHERE content like "Câu hỏi%"; 
-select * from question;
--- Question 14: Update thông tin của account có id = 5 thành tên "Nguyễn Bá Lộc" và
--- email thành loc.nguyenba@vti.com.vn
-select * from account;
-update account
-set 
-	full_name="Nguyễn Bá Lộc" , 
-	email="loc.nguyenba@vti.com.vn"
-where account_id=5;
-
--- Question 15: update account có id = 5 sẽ thuộc group có id = 4
-SELECT * from group_account;
-update group_account
-set 
-	group_id=4
-where account_id=5;
-	
-                
+-- 	Question 5: Viết lệnh để lấy ra danh sách câu hỏi được sử dụng trong đề thi nhiều
+-- 	nhất
+-- 	Question 6: Thông kê mỗi category Question được sử dụng trong bao nhiêu Question
+-- 	Question 7: Thông kê mỗi Question được sử dụng trong bao nhiêu Exam
+-- 	Question 8: Lấy ra Question có nhiều câu trả lời nhất
+-- 	Question 9: Thống kê số lượng account trong mỗi group
+-- 	Question 10: Tìm chức vụ có ít người nhất
+-- 	Question 11: Thống kê mỗi phòng ban có bao nhiêu dev, test, scrum master, PM
+-- 	Question 12: Lấy thông tin chi tiết của câu hỏi bao gồm: thông tin cơ bản của
+-- 	question, loại câu hỏi, ai là người tạo ra câu hỏi, câu trả lời là gì, …
+-- 	Question 13: Lấy ra số lượng câu hỏi của mỗi loại tự luận hay trắc nghiệm
+-- 	Question 14:Lấy ra group không có account nào
+-- 	Question 15: Lấy ra group không có account nào
+-- 	Question 16: Lấy ra question không có answer nào.

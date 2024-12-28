@@ -108,10 +108,10 @@ from account
 group by position_id;
  
 -- mệnh đề having
-SELECT *
+SELECT full_name, COUNT(position_id)
 from account
 group by position_id
-having count(account_id) >2;
+having count(position_id) >2;
 
 -- cập nhật dữ liệu
 -- vd: đổi tên phòng ban số 1 thành phòng chờ

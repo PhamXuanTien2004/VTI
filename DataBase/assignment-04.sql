@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS assignment_04;
-CREATE DATABASE assignment_04;
+CREATE DATABASE assignment04;
 USE assignment_04;
 
 -- Tạo bảng department
@@ -291,12 +291,23 @@ having count(account_id) >3;
 -- 	Question 5: Viết lệnh để lấy ra danh sách câu hỏi được sử dụng trong đề thi nhiều
 -- 	nhất
 -- 	Question 6: Thông kê mỗi category Question được sử dụng trong bao nhiêu Question
+SELECT category_id, count(category_id)
+FROM question
+GROUP BY category_id
+having count(category_id);
+
 -- 	Question 7: Thông kê mỗi Question được sử dụng trong bao nhiêu Exam
+SELECT content, count(category_id) as count
+FROM question
+ join exam using (category_id)
+GROUP BY content
+HAVING COUNT(category_id);
+
 -- 	Question 8: Lấy ra Question có nhiều câu trả lời nhất
 -- 	Question 9: Thống kê số lượng account trong mỗi group
 select group_id,count(group_id) as count
 from group_account
-left join `group` using (group_id)
+right join `group` using (group_id)
 group by group_id;
 
 -- 	Question 10: Tìm chức vụ có ít người nhất

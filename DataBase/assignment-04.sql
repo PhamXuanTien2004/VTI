@@ -290,11 +290,18 @@ having count(account_id) >3;
 
 -- 	Question 5: Viết lệnh để lấy ra danh sách câu hỏi được sử dụng trong đề thi nhiều
 -- 	nhất
+SELECT question.*
+FROM exam_question
+LEFT JOIN question USING (question_id)
+GROUP BY question_id
+ORDER BY COUNT(exam_id) 
+LIMIT 1;
+
 -- 	Question 6: Thông kê mỗi category Question được sử dụng trong bao nhiêu Question
-SELECT category_id, count(category_id)
+SELECT category_question.*, count(question_id)
 FROM question
-GROUP BY category_id
-having count(category_id);
+right join category_question USING(category_id)
+GROUP BY category_id;
 
 -- 	Question 7: Thông kê mỗi Question được sử dụng trong bao nhiêu Exam
 SELECT content, count(category_id) as count
@@ -303,7 +310,18 @@ FROM question
 GROUP BY content
 HAVING COUNT(category_id);
 
+SELECT question.*, count(exam_id) as count
+FROM exam_question
+right join question using (question_id)
+GROUP BY question_id;
+
 -- 	Question 8: Lấy ra Question có nhiều câu trả lời nhất
+SELECT question.*, count(answer_id) as count
+FROM answer
+right join question using (question_id)
+GROUP BY question_id
+ORDER BY count(answer_id) DESC
+limit 1;
 -- 	Question 9: Thống kê số lượng account trong mỗi group
 select group_id,count(group_id) as count
 from group_account
@@ -311,10 +329,51 @@ right join `group` using (group_id)
 group by group_id;
 
 -- 	Question 10: Tìm chức vụ có ít người nhất
+SELECT position_name, COUNT(position_id) AS count
+FROM position
+JOIN account USING (position_id)
+GROUP BY position_id
+ORDER BY COUNT(position_id)
+LIMIT 1;
+
 -- 	Question 11: Thống kê mỗi phòng ban có bao nhiêu dev, test, scrum master, PM
+-- select department.*, position.*, count(account_id)
+-- from department
+-- CROSS JOIN position
+-- LEFT JOIN account USING(position_id, department_id)
+-- GROUP BY 
+-- 	department_id,
+--     position_id
+-- ;
+
 -- 	Question 12: Lấy thông tin chi tiết của câu hỏi bao gồm: thông tin cơ bản của
 -- 	question, loại câu hỏi, ai là người tạo ra câu hỏi, câu trả lời là gì, …
--- 	Question 13: Lấy ra số lượng câu hỏi của mỗi loại tự luận hay trắc nghiệm
--- 	Question 14:Lấy ra group không có account nào
--- 	Question 15: Lấy ra group không có account nào
--- 	Question 16: Lấy ra question không có answer nào.
+SELECT question.*
+FROM question
+INNER JOIN account on creator_id = account_id
+INNER JOIN type_question USING (type_id)
+INNER JOIN answer USING (question_id);
+
+-- 	Question 13: Lấy ra số lượng câu hỏi của mỗi loại 
+-- tự luận hay trắc nghiệm
+select type_question.*, COUNT(question_id)
+from question
+RIGHT JOIN type_question USING (type_id)
+GROUP BY type_id;
+-- 	Question 15: Lấy ra group không có account nào 
+-- // EXECUTding join
+SELECT *
+FROM group_account
+RIGHT JOIN `group` USING (group_id)
+WHERE 
+	group_account.group_id IS NULL;
+
+-- 	Question 16: Lấy ra question không có answer nào. 
+-- // EXECUTding join
+SELECT *
+FROM question
+LEFT JOIN answer USING(question_id)
+WHERE answer.answer_id IS NULL;
+
+
+

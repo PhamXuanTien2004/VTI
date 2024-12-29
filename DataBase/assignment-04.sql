@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS assignment_04;
-CREATE DATABASE assignment04;
+CREATE DATABASE assignment_04;
 USE assignment_04;
 
 -- Tạo bảng department
@@ -266,7 +266,7 @@ VALUES                      (1         , 1      ),
                             (9         , 2      ),
                             (10        , 10     );
 
--- 1. Join.
+1. Join.
 -- 	Question 1: Viết lệnh để lấy ra danh sách nhân viên và thông tin phòng ban của họ
 SELECT full_name, department_name
 from account
@@ -375,5 +375,52 @@ FROM question
 LEFT JOIN answer USING(question_id)
 WHERE answer.answer_id IS NULL;
 
+
+
+-- 2. Union.
+-- Question 17:
+-- a) Lấy các account thuộc nhóm thứ 1
+-- b) Lấy các account thuộc nhóm thứ 2
+-- c) Ghép 2 kết quả từ câu a) và câu b) sao cho không 
+-- có record nào trùng nhau
+SELECT *
+FROM account
+WHERE position_id =1;
+
+SELECT *
+FROM account
+WHERE position_id =2;
+
+SELECT *
+FROM account
+WHERE position_id =1
+UNION
+SELECT *
+FROM account
+WHERE position_id =2;
+
+-- Question 18:
+-- a) Lấy các group có lớn hơn 5 thành viên
+-- b) Lấy các group có nhỏ hơn 7 thành viên
+-- c) Ghép 2 kết quả từ câu a) và câu b).
+SELECT 
+    g.group_id, 
+    g.group_name, 
+    COUNT(ga.account_id) AS account_count
+FROM group_account ga
+
+RIGHT JOIN `group` g USING (group_id)
+GROUP BY g.group_id, g.group_name
+HAVING COUNT(ga.account_id) > 5
+UNION ALL
+SELECT 
+    g.group_id, 
+    g.group_name, 
+    COUNT(ga.account_id) AS account_count
+FROM group_account ga
+
+RIGHT JOIN `group` g USING (group_id)
+GROUP BY g.group_id, g.group_name
+HAVING COUNT(ga.account_id)  <7;
 
 

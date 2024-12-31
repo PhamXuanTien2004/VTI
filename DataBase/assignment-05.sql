@@ -280,9 +280,29 @@ where department_id IN
 
 -- Question 2: Tạo view có chứa thông tin các account 
 -- tham gia vào nhiều group nhất
+SELECT account_id,full_name, COUNT(group_id) 
+FROM group_account
+JOIN account USING(account_id)
+GROUP BY account_id
+HAVING COUNT(group_id) >= ALL (
+	SELECT COUNT(group_id)
+	FROM group_account
+	JOIN account USING(account_id)
+	GROUP BY account_id
+);
 -- Question 3: Tạo view có chứa câu hỏi có những content quá 
 -- dài (content quá 300 từ được coi là quá dài) và xóa nó đi
 -- Question 4: Tạo view có chứa danh sách các phòng ban có nhiều nhân viên nhất
+SELECT department_id, department_name, COUNT(account_id) as count
+FROM department
+JOIN account USING(department_id)
+GROUP BY department_id
+having COUNT(account_id) >= ALL(
+	SELECT count(account_id) as count
+	FROM department
+	JOIN account USING(department_id)
+	GROUP BY department_id
+);
 
 -- Question 5: Tạo view có chứa tất các các câu hỏi do user họ Nguyễn tạo.
                 

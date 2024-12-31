@@ -423,4 +423,47 @@ RIGHT JOIN `group` g USING (group_id)
 GROUP BY g.group_id, g.group_name
 HAVING COUNT(ga.account_id)  <7;
 
+-- bài tập thêm
+-- Đếm số nhân viên trong từng phòng ban (department).
+
+SELECT department_name, COUNT(account_id)
+FROM department
+JOIN account USING(department_id)
+GROUP BY department_name;
+
+-- Thống kê số lượng account được tạo theo mỗi tháng trong năm 2020.
+SELECT MONTH(created_date) as month, COUNT(*) as total_account
+FROM account
+WHERE YEAR(created_date) = 2020
+GROUP BY MONTH(created_date);
+
+ -- Thống kê số lượng bài thi (exam) được tạo trong mỗi quý của năm 2020.
+SELECT month(created_date) as month, COUNT(*) as total_exam
+FROM exam
+WHERE year(created_date)=2020
+GROUP BY month(created_date);
+
+-- Tìm phòng ban có nhiều nhân viên nhất và số lượng nhân viên của phòng ban đó.
+SELECT department_name, COUNT(account_id) as count
+FROM department
+LEFT JOIN account USING(department_id)
+GROUP BY department_name
+HAVING count(account_id) >= ALL (
+	SELECT count(account_id)
+    FROM department
+    LEFT JOIN account USING (department_id)
+    GROUP BY department_name
+);
+
+--  Thống kê số lượng câu hỏi của mỗi chủ đề và chỉ hiện thị những chủ đề có ít nhất 2 câu hỏi.
+SELECT category_name, count(question_id) as count
+FROM category_question
+LEFT JOIN question USING(category_id)
+GROUP BY category_name
+HAVING count(question_id) >=2;
+
+
+
+
+
 

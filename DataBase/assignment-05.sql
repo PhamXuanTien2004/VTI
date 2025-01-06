@@ -269,6 +269,8 @@ VALUES                      (1         , 1      ),
                             
 				
 -- Question 1: Tạo view có chứa danh sách nhân viên thuộc phòng ban sale
+ DROP VIEW IF EXISTS view_01;
+CREATE OR REPLACE VIEW view_01 as
 SELECT *
 FROM account
 where department_id IN
@@ -280,6 +282,7 @@ where department_id IN
 
 -- Question 2: Tạo view có chứa thông tin các account 
 -- tham gia vào nhiều group nhất
+CREATE OR REPLACE VIEW view_02 as
 SELECT account_id,full_name, COUNT(group_id) 
 FROM group_account
 JOIN account USING(account_id)
@@ -291,8 +294,21 @@ HAVING COUNT(group_id) >= ALL (
 	GROUP BY account_id
 );
 -- Question 3: Tạo view có chứa câu hỏi có những content quá 
--- dài (content quá 300 từ được coi là quá dài) và xóa nó đi
--- Question 4: Tạo view có chứa danh sách các phòng ban có nhiều nhân viên nhất
+-- dài (content quá 3 từ được coi là quá dài) và xóa nó đi 
+-- Chú ý: hàm REPLACE dùng để thay thế ký từ trong chuỗi
+-- Cấu trúc hàm: REPLACE(chuỗi cần thay thế, ký tự cần thay thế, kỹ tự thay thế)
+-- hướng dẫn: đếm số lượng dấu " " +1 ra được số từ và dùng hàm char_length để đếm ký tự
+CREATE OR REPLACE VIEW view_03 AS
+SELECT * 
+FROM question
+WHERE char_length(content) - char_length(REPLACE(content, " ",""))+1 >3;
+
+DELETE FROM view_03;
+
+-- Question 4: Tạo view có chứa danh sách các phòng ban 
+-- có nhiều nhân viên nhất
+
+CREATE OR REPLACE VIEW view_04 as
 SELECT department_id, department_name, COUNT(account_id) as count
 FROM department
 JOIN account USING(department_id)
@@ -304,8 +320,27 @@ having COUNT(account_id) >= ALL(
 	GROUP BY department_id
 );
 
+-- Viết theo CTE
+WITH c1 AS (
+	SELECT department.*, count(department_name) as department_count
+    FROM department
+    LEFT JOIN account USING(department_id)
+    GROUP BY department_id
+)
+SELECT *
+FROM c1
+WHERE department_count = 
+	(SELECT max(department_count)
+	FROM c1);
+
 -- Question 5: Tạo view có chứa tất các các câu hỏi do user họ Nguyễn tạo.
-                
+	CREATE OR REPLACE VIEW view_05 as
+    SELECT *
+	FROM question
+	WHERE creator_id IN (
+	SELECT account_id
+	FROM account
+	WHERE full_name LIKE "Nguyen%");
                 
                 
                 

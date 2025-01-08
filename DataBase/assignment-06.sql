@@ -59,25 +59,201 @@ DELIMITER ;
 CALL sp_03();
 
 -- Question 4: Tạo store để trả ra id của type question có nhiều câu hỏi nhất.
+DROP PROCEDURE IF EXISTS sp_04;
+DELIMITER $$ 
+CREATE PROCEDURE sp_04(OUT out_type_id INT)
+	BEGIN
+		DECLARE v_type_id INT;
+        
+        WITH c1 AS (
+			SELECT type_question.*, COUNT(question_id) AS question_count
+            from type_question
+            LEFT JOIN question USING(type_id)
+            GROUP BY type_id
+        )
+        SELECT type_id INTO out_type_id 
+        FROM c1
+        WHERE question_count >= ALL (
+        SELECT question_count
+        FROM c1
+        );
+    END $$
+DELIMITER ;
+
 -- Question 5: Sử dụng store ở question 4 để tìm ra tên của type question.
+
+SET @type_id = NULL;
+CALL sp_04(@type_id);
+
+SELECT type_name
+FROM type_question
+WHERE type_id = @type_id;
 -- Question 6: Viết 1 store cho phép người dùng nhập vào 1 chuỗi và trả về group có tên
 -- chứa chuỗi của người dùng nhập vào hoặc trả về user có username chứa chuỗi của người dùng nhập vào.
+DROP PROCEDURE IF EXISTS sp_06;
+DELIMITER $$
+CREATE PROCEDURE sp_06 (IN in_search VARCHAR(50))
+BEGIN
+    SELECT "group" AS type, group_name AS name
+    FROM `group`
+    WHERE group_name LIKE CONCAT("%", in_search, "%")
+    UNION ALL
+    SELECT "account" AS type, username AS name
+    FROM account
+    WHERE username LIKE CONCAT("%", in_search, "%");
+END $$
+DELIMITER ;
+
+CALL sp_06("n");
 -- Question 7: Viết 1 store cho phép người dùng nhập vào thông tin fullName, email và trong store sẽ tự động gán:
 -- username sẽ giống email nhưng bỏ phần @..mail đi
 -- positionID: sẽ có default là developer
 -- departmentID: sẽ được cho vào 1 phòng chờ
 -- Sau đó in ra kết quả tạo thành công
+DROP PROCEDURE IF EXISTS sp_07;
+DELIMITER $$ 
+CREATE PROCEDURE sp_07(IN in_full_name VARCHAR(50), IN in_email VARCHAR(50))
+	BEGIN
+		DECLARE v_username VARCHAR(50);
+        DECLARE v_position_id INT;
+        DECLARE v_department_id INT;
+        
+        SELECT substring_index(in_email, "@", 1) INTO v_username;
+        
+        SELECT department_id INTO v_department_id
+        FROM department
+        WHERE department_name = "Phòng chờ";
+        
+        SELECT position_id INTO v_position_id
+        FROM position
+        WHERE position_name = "Dev";
+        
+        INSERT INTO account (email   , username  , full_name   , department_id  , position_id  )
+		VALUES              (in_email, v_username, in_full_name, v_department_id, v_position_id);
+    
+		SELECT *
+    FROM account
+    WHERE email = in_email;
+    END $$
+DELIMITER ;
+
+CALL sp_07("Pham Xuan Tien", "px.tien.2004@gmail.com");
 -- Question 8: Viết 1 store cho phép người dùng nhập vào Essay hoặc Multiple-Choice
 -- để thống kê câu hỏi essay hoặc multiple-choice nào có content dài nhất
+
+DROP PROCEDURE IF EXISTS sp_08;
+DELIMITER $$
+CREATE PROCEDURE sp_08( IN in_type_question ENUM("Essay", "Multiple-Choice"))
+BEGIN
+	DECLARE v_type_id INT;
+    
+    SELECT type_id INTO v_type_id
+    FROM type_question
+    WHERE type_name = in_type_question;
+    WITH c1 AS (
+		SELECT *, char_length(content) as content_length
+		FROM question
+		WHERE type_id = v_type_id
+    )
+    SELECT * 
+    FROM c1
+    WHERE content_length >= all 
+    (SELECT content_length
+    from c1);
+END$$
+DELIMITER ;
+
+CALL sp_08('Essay');
 -- Question 9: Viết 1 store cho phép người dùng xóa exam dựa vào ID
+DROP PROCEDURE IF EXISTS sp_09;
+DELIMITER $$
+CREATE PROCEDURE sp_09 (IN in_exam_id INT)
+BEGIN
+    DELETE FROM exam
+    WHERE exam_id = in_exam_id;
+END $$
+DELIMITER ;
+
+CALL sp_09(3);
 -- Question 10: Tìm ra các exam được tạo từ 3 năm trước và xóa các exam đó đi (sử
 -- dụng store ở câu 9 để xóa)
 -- Sau đó in số lượng record đã remove từ các table liên quan trong khi
 -- removing
+DROP PROCEDURE IF EXISTS sp_10;
+DELIMITER $$
+CREATE PROCEDURE sp_10 ()
+BEGIN
+	DECLARE v_exam_count INT;
+	DECLARE v_exam_question_count INT;
+
+	select count(*) INTO v_exam_count
+	FROM exam
+	WHERE created_date < CURRENT_DATE - INTERVAL 5 YEAR;
+
+	SELECT COUNT(*) INTO v_exam_question_count
+	FROM exam
+	WHERE created_date < CURRENT_DATE - INTERVAL 5 YEAR;
+
+	
+    DELETE FROM exam
+    where current_date()- created_date >5;
+     SELECT v_exam_count + v_exam_question_count as removed;
+     
+END $$
+DELIMITER ;
+
+CAll sp_10();
 -- Question 11: Viết store cho phép người dùng xóa phòng ban bằng cách người dùng
 -- nhập vào tên phòng ban và các account thuộc phòng ban đó sẽ được
 -- chuyển về phòng ban default là phòng ban chờ việc
+DROP PROCEDURE IF EXISTS sp_11;
+DELIMITER $$
+
+CREATE PROCEDURE sp_11(IN in_department_name VARCHAR(50))
+BEGIN
+    DECLARE v_department_id INT;
+
+    SELECT department_id INTO v_department_id
+    FROM department
+    WHERE department_name = in_department_name;
+    
+    SELECT account.*, 
+           'Phòng Chờ' AS department_name
+    FROM account
+    LEFT JOIN department USING (department_id)
+    WHERE account.department_id = v_department_id;
+END $$
+
+DELIMITER ;
+
+CALL sp_11('Sale');
 -- Question 12: Viết store để in ra mỗi tháng có bao nhiêu câu hỏi được tạo trong năm nay
+DROP PROCEDURE IF EXISTS sp_12;
+DELIMITER $$
+CREATE PROCEDURE sp_12 ()
+BEGIN
+	DECLARE v_year INT DEFAULT YEAR(CURDATE());
+-- 	DECLARE v_year INT DEFAULT 2020;
+	WITH RECURSIVE c1(thang) as (
+    SELECT 1
+    UNION ALL
+    SELECT thang +1
+    FROM c1
+    WHERE thang<12
+    ),
+    c2 as (
+    SELECT *, month(created_date) as thang
+    FROM question
+    )
+    SELECT thang,count( question_id)
+    FROM c1
+    LEFT JOIN c2 USING(thang)
+    GROUP BY thang;   
+    
+	
+END $$
+DELIMITER ;
+CALL sp_12();
 -- Question 13: Viết store để in ra mỗi tháng có bao nhiêu câu hỏi được tạo trong 6 tháng gần đây nhất
 -- (Nếu tháng nào không có thì sẽ in ra là "không có câu hỏi nào trong tháng")
 

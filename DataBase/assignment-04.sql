@@ -462,8 +462,30 @@ LEFT JOIN question USING(category_id)
 GROUP BY category_name
 HAVING count(question_id) >=2;
 
+-- Hãy viết câu lệnh SQL để tính số lượng câu hỏi (question_id) trong mỗi đề thi (exam_id) 
+-- và hiển thị kết quả bao gồm mã đề thi (code) và tiêu đề đề thi (title).
 
+SELECT exam_id, code, title, count(question_id) AS count_question
+FROM exam_question
+JOIN exam USING(exam_id)
+GROUP BY exam_id;
 
+-- Câu hỏi: Hãy viết câu lệnh SQL để tìm ra số lượng thành viên tham gia vào từng nhóm (group_id),
+-- đồng thời hiển thị tên nhóm (group_name), và số lượng câu hỏi mà mỗi nhóm đã tạo ra. 
+-- Chỉ hiển thị các nhóm có ít nhất 2 thành viên và đã tạo ít nhất 1 câu hỏi.
 
+SELECT group_id,group_name, count(account_id) AS count_account, count(creator_id) AS count_creator
+FROM `group`
+JOIN group_account USING(group_id)
+JOIN question USING(creator_id)
+GROUP BY group_id;
 
+SELECT g.group_id, g.group_name, COUNT(DISTINCT ga.account_id) AS member_count, 
+       COUNT(DISTINCT q.question_id) AS question_count
+FROM `group` g
+JOIN group_account ga ON g.group_id = ga.group_id
+-- JOIN account a ON ga.account_id = a.account_id
+LEFT JOIN question q ON a.account_id = q.creator_id
+GROUP BY g.group_id, g.group_name
+HAVING member_count >= 2 AND question_count >= 1;
 

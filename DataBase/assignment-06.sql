@@ -208,55 +208,84 @@ CAll sp_10();
 -- chuyển về phòng ban default là phòng ban chờ việc
 DROP PROCEDURE IF EXISTS sp_11;
 DELIMITER $$
-
-CREATE PROCEDURE sp_11(IN in_department_name VARCHAR(50))
+CREATE PROCEDURE sp_11 (IN in_department_name VARCHAR(50))
 BEGIN
-    DECLARE v_department_id INT;
+    DECLARE v_old_department_id INT;
+    DECLARE v_new_department_id INT;
 
-    SELECT department_id INTO v_department_id
+    SELECT department_id INTO v_old_department_id
     FROM department
     WHERE department_name = in_department_name;
-    
-    SELECT account.*, 
-           'Phòng Chờ' AS department_name
-    FROM account
-    LEFT JOIN department USING (department_id)
-    WHERE account.department_id = v_department_id;
-END $$
 
+    SELECT department_id INTO v_new_department_id
+    FROM department
+    WHERE department_name = "Phòng chờ";
+    
+    UPDATE account
+    SET department_id = v_new_department_id
+    WHERE department_id = v_old_department_id;
+    
+    DELETE FROM department
+    WHERE department_id = v_old_department_id;
+END $$
 DELIMITER ;
 
-CALL sp_11('Sale');
+CALL sp_11("Marketing");
+
 -- Question 12: Viết store để in ra mỗi tháng có bao nhiêu câu hỏi được tạo trong năm nay
 DROP PROCEDURE IF EXISTS sp_12;
 DELIMITER $$
 CREATE PROCEDURE sp_12 ()
 BEGIN
-	DECLARE v_year INT DEFAULT YEAR(CURDATE());
--- 	DECLARE v_year INT DEFAULT 2020;
-	WITH RECURSIVE c1(thang) as (
+	WITH RECURSIVE c1 (month) AS (
     SELECT 1
     UNION ALL
-    SELECT thang +1
+    SELECT month + 1 FROM c1 WHERE month < 12
+), c2 AS (
+    SELECT YEAR(CURRENT_DATE) AS year, month
     FROM c1
-    WHERE thang<12
-    ),
-    c2 as (
-    SELECT *, month(created_date) as thang
+), c3 AS (
+    SELECT *, YEAR(created_date) AS year, MONTH(created_date) AS month
     FROM question
-    )
-    SELECT thang,count( question_id)
-    FROM c1
-    LEFT JOIN c2 USING(thang)
-    GROUP BY thang;   
+    WHERE YEAR(created_date) = YEAR(CURRENT_DATE)
+)
+SELECT year, month, COUNT(question_id)
+FROM c2
+LEFT JOIN c3 USING (year, month)
+GROUP BY year, month;
     
-	
+
 END $$
 DELIMITER ;
 CALL sp_12();
 -- Question 13: Viết store để in ra mỗi tháng có bao nhiêu câu hỏi được tạo trong 6 tháng gần đây nhất
 -- (Nếu tháng nào không có thì sẽ in ra là "không có câu hỏi nào trong tháng")
+DROP PROCEDURE IF EXISTS sp_13;
+DELIMITER $$
+CREATE PROCEDURE sp_13 ()
+BEGIN
+	WITH RECURSIVE c1 (date) AS (
+    SELECT CURRENT_DATE - INTERVAL 1 MONTH
+    UNION ALL
+    SELECT date - INTERVAL 1 MONTH
+    FROM c1
+    WHERE date > CURRENT_DATE - INTERVAL 6 MONTH
+), c2 AS (
+    SELECT YEAR(date) AS year, MONTH(date) AS month
+    FROM c1
+), c3 AS (
+    SELECT *, YEAR(created_date) AS year, MONTH(created_date) AS month
+    FROM question
+)
+SELECT year, month, COUNT(question_id)
+FROM c2
+LEFT JOIN c3 USING (year, month)
+GROUP BY year, month;
+    
 
+END $$
+DELIMITER ;
+CALL sp_13();
 
 
 

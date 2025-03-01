@@ -7,7 +7,7 @@ public class EncapsulationDemo {
     //1. Su dung private cho thuộc tính
     //2. Thêm getter: xuất dữ liệu
         // / setter: truyền dữ liêệu
-    Account account = new Account(1000);
+    Account account = new Account("1000", "Phạm Xuân Tiến", 10000);
     System.out.println(account.getBalance());
     }
 }

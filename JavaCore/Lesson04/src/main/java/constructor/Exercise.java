@@ -1,6 +1,6 @@
 package constructor;
 
-public class Excercise {
+public class Exercise {
     public static void main(String[] args) {
         Account account = new Account();
         account.setEmail("a,kshd,aksdj");

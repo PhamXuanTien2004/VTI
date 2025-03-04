@@ -6,17 +6,14 @@ public class News implements INews {
     private String publishDate;
     private String author;
     private String content;
-    private float  averageRate;
-    private int[] rates;
+    private float averageRate;
+    private int[] rates = new int[]{0, 0, 0}; // Tránh NullPointerException
 
-    public News( String title, String publishDate, String author, String content, int[] rates) {
-
+    public News(String title, String publishDate, String author, String content) {
         this.title = title;
         this.publishDate = publishDate;
         this.author = author;
         this.content = content;
-        this.rates = rates;
-
     }
 
     public int getId() {
@@ -68,41 +65,31 @@ public class News implements INews {
     }
 
     public void setRates(int[] rates) {
-        this.rates = rates;
-    }
-
-    public void setAverageRate(float averageRate) {
-        this.averageRate = averageRate;
-    }
-
-    @Override
-    public String toString() {
-        return "news{" +
-
-                ", title='" + title + '\'' +
-                ", publishDate='" + publishDate + '\'' +
-                ", author='" + author + '\'' +
-                ", content='" + content + '\'' +
-                ", averageRate=" + averageRate +
-
-                '}';
+        if (rates != null && rates.length > 0) {
+            this.rates = rates;
+        } else {
+            System.out.println("Invalid rates array. It must have at least one value.");
+        }
     }
 
     @Override
     public void display() {
-        System.out.println("news{" +
-
+        System.out.println("News{" +
+                "id=" + id +
                 ", title='" + title + '\'' +
                 ", publishDate='" + publishDate + '\'' +
                 ", author='" + author + '\'' +
                 ", content='" + content + '\'' +
-                ", averageRate=" + averageRate +
-
+                ", averageRate=" + calculate() +
                 '}');
     }
 
     @Override
     public float calculate() {
+        if (rates == null || rates.length == 0) {
+            System.out.println("No rates available to calculate.");
+            return 0;
+        }
         int sum = 0;
         for (int rate : rates) {
             sum += rate;

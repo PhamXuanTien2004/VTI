@@ -6,11 +6,11 @@ public class User {
     private String email;
     private String password;
 
-    public User(int id, String fullName, String email, String password) {
+    public User(int id, String fullName, String email) {
         this.id = id;
-        FullName = fullName;
+        this.FullName = fullName;
         this.email = email;
-        this.password = password;
+
     }
 
     public int getId() {
@@ -43,5 +43,15 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return  "|" +
+                "id=" + id +
+                "| FullName='" + FullName + '\'' +
+                "| email='" + email + '\''+
+                "|"
+                ;
     }
 }

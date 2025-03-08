@@ -4,7 +4,7 @@ public class Admin extends User{
     private int expInYear;
 
     public Admin(int id, String fullName, String email, String password, int expInYear) {
-        super(id, fullName, email, password);
+        super(id, fullName, email);
         this.expInYear = expInYear;
     }
 

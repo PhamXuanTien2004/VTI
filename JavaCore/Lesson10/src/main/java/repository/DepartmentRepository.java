@@ -21,7 +21,7 @@ public class DepartmentRepository implements IDepartmentRepository {
             while (resultSet.next()) {
                 int id = resultSet.getInt("department_id");
                 String name = resultSet.getString("department_name");
-                departments.add(new Department(name));
+                departments.add(new Department(id, name));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class DepartmentRepository implements IDepartmentRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 String name = resultSet.getString("department_name");
-                return new Department(name);
+                return new Department(id, name);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,7 +3,6 @@ package controller;
 import entity.User;
 import service.IUserService;
 import service.UserService;
-
 import java.util.List;
 
 public class UserController {
@@ -19,5 +18,13 @@ public class UserController {
 
     public boolean deleteUserById (int id){
         return userService.deleteUserById(id);
+    }
+
+    public void loginAdmin (String a, String b) {
+        userService.loginAdmin(a, b);
+    }
+
+    User login (String email, String password) {
+        return userService.login(email, password);
     }
 }

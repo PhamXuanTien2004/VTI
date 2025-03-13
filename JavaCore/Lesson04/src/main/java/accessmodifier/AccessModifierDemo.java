@@ -8,7 +8,7 @@ public class AccessModifierDemo {
         // Dùng cho: class, method, property
         // public
 
-        Cat cat = new Cat();
+//        Cat cat = new Cat();
 //        System.out.println("Name Cat: " + cat.name);
 //        Dog dog = new Dog("ABC", 20);
 //        System.out.println(dog);

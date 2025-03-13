@@ -10,6 +10,12 @@ public class ConstructorDemo {
 
         Dog dog = new Dog("abc");
         System.out.println(dog);
+
+        int a= 5;
+        do {
+            a++;
+        } while (a<10);
+        System.out.printf("a="+ a);
     }
 
 

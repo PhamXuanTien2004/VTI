@@ -59,11 +59,51 @@ public class UserRepository implements IUserRepository{
             preparedStatement.setInt(1, id);
 
             int row = preparedStatement.executeUpdate(); // Thực hiện DELETE
-            System.out.println("Hoan thanh viec xoa id="+ id);
+
             return row > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public User login(String a, String b) {
+        String sql = "SELECT * FROM `User` WHERE Email =  ? and `PassWord` = ?";
+        try (Connection connection = JDBCUtils.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1,a);
+            preparedStatement.setString(2,b);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                String fullName = resultSet.getString("FullName");
+                return new User( fullName);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public User loginAdmin(String a, String b) {
+        String sql = "SELECT * FROM `User` RIGHT JOIN `Admin`USING (id) WHERE Email =  ? and `PassWord` = ?";
+        try (Connection connection = JDBCUtils.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1,a);
+            preparedStatement.setString(2,b);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String fullName = resultSet.getString("FullName");
+                String email = resultSet.getString("Email");
+                return new User(id, fullName, email);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

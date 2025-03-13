@@ -10,4 +10,8 @@ public interface IUserRepository {
     User getUserById(int id);
 
     boolean deleteUserById (int id);
+
+    User login (String email, String password);
+
+    User loginAdmin (String a, String b) ;
 }

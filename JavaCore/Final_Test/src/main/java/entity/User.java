@@ -13,6 +13,10 @@ public class User {
 
     }
 
+    public User(String fullName) {
+        FullName = fullName;
+    }
+
     public int getId() {
         return id;
     }

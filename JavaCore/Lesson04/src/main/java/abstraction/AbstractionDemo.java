@@ -9,8 +9,10 @@ public class AbstractionDemo {
     Animal animal = new Animal() {
         @Override
         public void makeSound() {
-
+            System.out.printf( "gau");
         }
     };
+        animal.makeSound();
+        animal.d();
     }
 }

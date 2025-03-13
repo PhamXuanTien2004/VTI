@@ -5,5 +5,7 @@ public class Exercise {
         Student student = new Student("Vu Thuy Duong", "BG");
         student.getDiem();
         System.out.println(student);
+
+
     }
 }

@@ -1,19 +1,34 @@
 package com.vti.testing.service;
 
 import com.vti.testing.entity.Department;
-import com.vti.testing.repository.IDepartmentRepostory;
+import com.vti.testing.repository.IDepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service //class thuộc layer Service
+@Service // class thuộc layer Service
 public class DepartmentService implements IDepartmentService {
-    @Autowired //tự động khỏi tạo đối tượng
-    private IDepartmentRepostory departmentRepostory;
+    @Autowired // tự khởi tạo đối tượng
+    private IDepartmentRepository departmentRepository;
 
     @Override
     public List<Department> getAllDepartments() {
-        return departmentRepostory.findAll();
+        return departmentRepository.findAll();
+    }
+
+    @Override
+    public Department createDepartment(Department department) {
+        return departmentRepository.save(department);
+    }
+
+    @Override
+    public Department updateDepartment(Department department) {
+        return departmentRepository.save(department);
+    }
+
+    @Override
+    public void deleteDepartment(int id) {
+        departmentRepository.deleteById(id);
     }
 }

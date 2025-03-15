@@ -15,7 +15,7 @@ public class ConstructorDemo {
         do {
             a++;
         } while (a<10);
-        System.out.printf("a="+ a);
+        System.out.printf("a="+  a);
     }
 
 

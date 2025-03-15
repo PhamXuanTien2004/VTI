@@ -3,9 +3,9 @@ package com.vti.testing.controller;
 import com.vti.testing.entity.Department;
 import com.vti.testing.service.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,8 +14,33 @@ import java.util.List;
 public class DepartmentController {
     @Autowired
     private IDepartmentService departmentService;
+
     @GetMapping
-    public List<Department> getAllDepartment(){
+    public List<Department> getAllDepartments() {
         return departmentService.getAllDepartments();
-    };
+    }
+
+    // TODO: Homework (path {id})
+    public Department getDepartmentById(){
+        return null;
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> createDepartment(@RequestBody Department department) { // @RequestBody: lấy thông tin client truyền trong body
+        Department departmentCreated = departmentService.createDepartment(department);
+        return new ResponseEntity<>(departmentCreated, HttpStatus.CREATED);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Object> updateDepartment(@PathVariable int id, @RequestBody Department department) { // @PathVariable lấy giá trị được truyền ở đường dẫn
+        department.setId(id);
+        Department departmentUpdated = departmentService.updateDepartment(department);
+        return new ResponseEntity<>(departmentUpdated, HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Object> deleteDepartment(@PathVariable int id) {
+        departmentService.deleteDepartment(id);
+        return new ResponseEntity<>("Department id = " + id + " deleted", HttpStatus.OK);
+    }
 }

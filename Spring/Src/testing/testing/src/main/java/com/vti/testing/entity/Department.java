@@ -1,27 +1,23 @@
 package com.vti.testing.entity;
 
-
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity // class là 1 entity
-@Table (name = "Department") //config bảng
-@NoArgsConstructor // tạo contructor không tham số
-//@Getter //getter cho tất cả các properties
-//@Setter //setter cho tất cả các properties
+@Table(name = "Department") // config bảng
+//@NoArgsConstructor // tạo constructor không tham số
+//@Getter // getter của tất cả property
+//@Setter // setter của tất cả property
 public class Department {
-    @Id //PRIMARY KEY
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //AUTO_INCREMENT
-    @Column(name = "DepartmentID") //config cột (name = "tên cột")
+    @Id // PRIMARY KEY
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // AUTO_INCREMENT
+    @Column(name = "DepartmentID") // config cột (name: tên cột)
     private int id;
-
-    @Column(name ="DepartName" , length = 50, nullable = false) //length = độ dài tối đa | nulltable =  NOT NULL
+    @Column(name = "DepartmentName", length = 50, nullable = false) // length: độ dài tối đa | nullable <=> NOT NULL
     private String name;
 
-    //contructor không tham số
-    //getter, setter cho tất cả thuộc tính (property)
+    // constructor không tham số
+    // getter, setter cho tất cả property
 
     public int getId() {
         return id;

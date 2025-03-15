@@ -21,8 +21,10 @@ public class DepartmentController {
     }
 
     // TODO: Homework (path {id})
-    public Department getDepartmentById(){
-        return null;
+    @GetMapping("{id}")
+    public ResponseEntity<Object> getDepartmentById (@PathVariable int id) {
+        return departmentService.getDepartmentById(id);
+
     }
 
     @PostMapping

@@ -27,7 +27,6 @@ public class DepartmentRepository implements IDepartmentRepository {
             e.printStackTrace();
             return null;
         }
-
         return departments;
     }
 

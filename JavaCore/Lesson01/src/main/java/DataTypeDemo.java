@@ -36,8 +36,8 @@ public class DataTypeDemo {
         System.out.println("date = " + date);
 
         // kiểu enum
-        Gender gender = Gender.FEMALE;
-        System.out.println("gender = " + gender);
+//        Gender gender = Gender.FEMALE;
+//        System.out.println("gender = " + gender);
 
         // Kiểu array
         int[] numbers = {2, 4, 6, 8};

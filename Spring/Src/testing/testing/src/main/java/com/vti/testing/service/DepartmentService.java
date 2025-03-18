@@ -3,10 +3,10 @@ package com.vti.testing.service;
 import com.vti.testing.entity.Department;
 import com.vti.testing.repository.IDepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 @Service // class thuộc layer Service
 public class DepartmentService implements IDepartmentService {
@@ -34,9 +34,9 @@ public class DepartmentService implements IDepartmentService {
     }
 
     @Override
-    public ResponseEntity<Object> getDepartmentById(int id) {
-        departmentRepository.findById(id);
-        return null;
+    public Department getDepartmentById(int id) {
+        return departmentRepository.findById(id).orElse(null);
+
     }
 
 }

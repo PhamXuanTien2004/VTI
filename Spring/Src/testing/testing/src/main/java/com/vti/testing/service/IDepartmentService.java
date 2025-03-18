@@ -1,9 +1,10 @@
 package com.vti.testing.service;
 
 import com.vti.testing.entity.Department;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IDepartmentService {
     List<Department> getAllDepartments();
@@ -14,5 +15,5 @@ public interface IDepartmentService {
 
     void deleteDepartment(int id);
 
-    ResponseEntity<Object> getDepartmentById (int id);
+    Department getDepartmentById (int id);
 }

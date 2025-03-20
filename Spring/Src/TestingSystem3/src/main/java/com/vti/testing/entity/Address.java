@@ -15,6 +15,13 @@ public class Address {
     @OneToOne(mappedBy = "address")
     private User user;
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public int getId() {
         return id;

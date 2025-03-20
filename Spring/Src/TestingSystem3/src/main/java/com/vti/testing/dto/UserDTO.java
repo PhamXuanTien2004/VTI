@@ -3,7 +3,7 @@ package com.vti.testing.dto;
 public class UserDTO {
     private int id;
     private String username;
-    private String addressSreetl;
+    private String addressSreet;
 
     public int getId() {
         return id;
@@ -21,11 +21,14 @@ public class UserDTO {
         this.username = username;
     }
 
-    public String getAddressSreetl() {
-        return addressSreetl;
+    public String getAddressSreet() {
+        return addressSreet;
     }
 
-    public void setAddressSreetl(String addressSreetl) {
-        this.addressSreetl = addressSreetl;
+    public void setAddressSreet(String addressSreetl) {
+        this.addressSreet = addressSreetl;
     }
+
+
+
 }

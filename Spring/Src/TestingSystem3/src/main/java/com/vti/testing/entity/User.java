@@ -10,7 +10,7 @@ public class User {
     private int id;
     @Column(length = 50, nullable = false, unique = true)
     private String username;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 

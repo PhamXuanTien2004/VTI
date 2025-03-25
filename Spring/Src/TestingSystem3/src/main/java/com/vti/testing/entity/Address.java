@@ -10,18 +10,18 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(length = 50, nullable = false, unique = true)
+    @Column(length = 50, nullable = false)
     private String street;
-    @Column(length = 50, nullable = false, unique = true)
+    @Column(length = 50, nullable = false)
     private String city;
     @OneToMany(mappedBy = "address")
-    private List<User> users;
+    private List<UserAddress> users;
 
-    public List<User> getUsers() {
+    public List<UserAddress> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(List<UserAddress> users) {
         this.users = users;
     }
 

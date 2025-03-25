@@ -3,5 +3,10 @@ package com.vti.testing.repository;
 import com.vti.testing.entity.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IDepartmentRepository extends JpaRepository<Department, Integer> {
+import java.util.List;
+
+public interface IDepartmentRepository extends JpaRepository<Department, Integer>{
+    List <Department> findByNameContaining (String name);
+
+    List<Department> findByTotalMemberBetween(int from, int to);
 }

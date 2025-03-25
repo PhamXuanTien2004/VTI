@@ -19,13 +19,23 @@ public class IDepartmentController {
 
     @GetMapping
     public List<Department> getAllAddresses() {
-        List<Department> departments = departmentService.getAllAddresses();
-        return departmentService.getAllAddresses();
+        List<Department> departments = departmentService.getAllDepartments();
+        return departmentService.getAllDepartments();
     }
 
     @GetMapping("{id}")
     public Department getDepartmentById(@PathVariable int id) {
         Department department = departmentService.getDepartmentById(id);
         return departmentService.getDepartmentById(id);
+    }
+
+    @GetMapping("name/{name}")
+    public List<Department> getDepartmentByName(@PathVariable String name){
+        return departmentService.getDepartmentByName(name);
+    }
+
+    @GetMapping("totalmember/range")
+    public List<Department> getDepartmentsTotalMemberByRange(@PathVariable int from, @PathVariable int to){
+        return departmentService.getDepartmentsTotalMemberByRange( from, to);
     }
 }

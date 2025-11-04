@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/vti_be_dtn_2306_user_management_spring
+    username: root
+    password: root
